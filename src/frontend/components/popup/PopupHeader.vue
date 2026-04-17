@@ -112,21 +112,20 @@ function handleToggleAlwaysOnTop() {
         </n-button>
       </n-space>
     </div>
-    <!-- 目录与发起agent信息（默认直接显示，不隐藏） -->
-    <div class="mt-1.5 ml-6 flex flex-wrap items-center gap-2 text-sm">
-      <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-gray-100 border border-gray-300 text-black-800">
-        <span class="i-carbon-folder w-3 h-3" />
-        <span class="font-medium">目录:</span>
+    <!-- 目录与发起agent信息（纯白底黑字，两行文本常显） -->
+    <div class="mt-1.5 ml-6 text-sm leading-5 text-black">
+      <div class="break-all">
+        <span class="font-medium">目录：</span>
         <span>{{ displayFolder }}</span>
-      </span>
-      <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-gray-100 border border-gray-300 text-black-800">
-        <span class="i-carbon-user w-3 h-3" />
-        <span class="font-medium">Agent:</span>
+      </div>
+      <div class="break-all">
+        <span class="font-medium">Agent：</span>
         <span>{{ displayAgent }}</span>
-      </span>
-      <span v-if="props.workingDirectory" class="text-gray-600 break-all">
-        {{ props.workingDirectory }}
-      </span>
+      </div>
+      <div v-if="props.workingDirectory" class="break-all text-black">
+        <span class="font-medium">路径：</span>
+        <span>{{ props.workingDirectory }}</span>
+      </div>
     </div>
   </div>
 </template>

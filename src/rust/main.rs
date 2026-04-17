@@ -1,3 +1,5 @@
+#![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
+
 use cunzhi::app::{handle_cli_args, run_tauri_app};
 use cunzhi::utils::auto_init_logger;
 use anyhow::Result;

@@ -107,7 +107,7 @@ onUnmounted(() => {
       class="flex flex-col w-full h-screen bg-black text-white select-none"
     >
       <!-- 头部 - 固定在顶部 -->
-      <div class="sticky top-0 z-50 flex-shrink-0 bg-black-100 border-b-2 border-black-200">
+      <div class="sticky top-0 z-50 flex-shrink-0 bg-white border-b border-gray-200">
         <PopupHeader
           :current-theme="props.appConfig.theme"
           :loading="false"
@@ -156,7 +156,7 @@ onUnmounted(() => {
       class="flex flex-col w-full h-screen bg-black text-white"
     >
       <!-- 头部骨架 -->
-      <div class="flex-shrink-0 bg-black-100 border-b-2 border-black-200 px-4 py-3">
+      <div class="flex-shrink-0 bg-white border-b border-gray-200 px-4 py-3">
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-3">
             <n-skeleton

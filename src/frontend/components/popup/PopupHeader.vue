@@ -59,12 +59,12 @@ function handleToggleAlwaysOnTop() {
 </script>
 
 <template>
-  <div class="px-4 py-3 select-none">
+  <div class="px-4 py-3 select-none bg-white">
     <div class="flex items-center justify-between">
       <!-- 左侧：标题 -->
       <div class="flex items-center gap-3">
         <div class="w-3 h-3 rounded-full bg-primary-500" />
-        <h1 class="text-base font-medium text-white">
+        <h1 class="text-base font-medium text-black-900">
           寸止 - 告别AI提前终止烦恼，助力AI更加持久
         </h1>
       </div>
@@ -81,7 +81,7 @@ function handleToggleAlwaysOnTop() {
           <template #icon>
             <div
               :class="props.alwaysOnTop ? 'i-carbon-pin-filled' : 'i-carbon-pin'"
-              class="w-4 h-4 text-white"
+              class="w-4 h-4 text-black-700"
             />
           </template>
         </n-button>
@@ -95,7 +95,7 @@ function handleToggleAlwaysOnTop() {
           <template #icon>
             <div
               :class="props.showMainLayout ? 'i-carbon-chat' : 'i-carbon-settings'"
-              class="w-4 h-4 text-white"
+              class="w-4 h-4 text-black-700"
             />
           </template>
         </n-button>
@@ -107,24 +107,24 @@ function handleToggleAlwaysOnTop() {
           @click="handleThemeChange"
         >
           <template #icon>
-            <ThemeIcon :theme="props.currentTheme" class="w-4 h-4 text-white" />
+            <ThemeIcon :theme="props.currentTheme" class="w-4 h-4 text-black-700" />
           </template>
         </n-button>
       </n-space>
     </div>
     <!-- 目录与发起agent信息（默认直接显示，不隐藏） -->
     <div class="mt-1.5 ml-6 flex flex-wrap items-center gap-2 text-sm">
-      <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-black-700 text-white">
+      <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-gray-100 border border-gray-300 text-black-800">
         <span class="i-carbon-folder w-3 h-3" />
         <span class="font-medium">目录:</span>
         <span>{{ displayFolder }}</span>
       </span>
-      <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-black-700 text-white">
+      <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-gray-100 border border-gray-300 text-black-800">
         <span class="i-carbon-user w-3 h-3" />
         <span class="font-medium">Agent:</span>
         <span>{{ displayAgent }}</span>
       </span>
-      <span v-if="props.workingDirectory" class="text-black-700 break-all">
+      <span v-if="props.workingDirectory" class="text-gray-600 break-all">
         {{ props.workingDirectory }}
       </span>
     </div>

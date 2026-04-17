@@ -393,7 +393,7 @@ Here is my original instruction:
     <div class="flex-1 overflow-y-auto scrollbar-thin">
       <!-- 消息内容 - 允许选中 -->
       <div class="mx-2 mt-2 mb-1 px-4 py-3 bg-white border border-gray-200 rounded-lg select-text" data-guide="popup-content">
-        <PopupContent :request="request" :loading="loading" :current-theme="props.appConfig.theme" @quote-message="handleQuoteMessage" />
+        <PopupContent :request="request" :loading="loading" current-theme="light" @quote-message="handleQuoteMessage" />
       </div>
 
       <!-- 输入和选项 - 允许选中 -->

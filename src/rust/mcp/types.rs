@@ -11,6 +11,10 @@ pub struct ZhiRequest {
     #[schemars(description = "消息是否为Markdown格式，默认为true")]
     #[serde(default = "default_is_markdown")]
     pub is_markdown: bool,
+
+    #[schemars(description = "发起本次对话的 agent 标识（可选）")]
+    #[serde(default)]
+    pub source_agent: Option<String>,
 }
 
 fn default_is_markdown() -> bool {
@@ -52,6 +56,8 @@ pub struct PopupRequest {
     pub predefined_options: Option<Vec<String>>,
     pub is_markdown: bool,
     pub working_directory: String,
+    #[serde(default)]
+    pub source_agent: Option<String>,
 }
 
 /// 新的结构化响应数据格式

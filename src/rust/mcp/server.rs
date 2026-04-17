@@ -102,6 +102,10 @@ impl ServerHandler for ZhiServer {
                 "is_markdown": {
                     "type": "boolean",
                     "description": "消息是否为Markdown格式，默认为true"
+                },
+                "source_agent": {
+                    "type": "string",
+                    "description": "发起本次对话的 agent 标识（可选）"
                 }
             },
             "required": ["message"]

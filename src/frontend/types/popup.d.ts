@@ -6,6 +6,7 @@ export interface McpRequest {
   predefined_options?: string[]
   is_markdown?: boolean
   working_directory?: string
+  source_agent?: string
 }
 
 // 自定义prompt类型定义

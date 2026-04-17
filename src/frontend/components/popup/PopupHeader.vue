@@ -8,6 +8,7 @@ interface Props {
   showMainLayout?: boolean
   alwaysOnTop?: boolean
   workingDirectory?: string
+  sourceAgent?: string
 }
 
 interface Emits {
@@ -22,6 +23,7 @@ const props = withDefaults(defineProps<Props>(), {
   showMainLayout: false,
   alwaysOnTop: false,
   workingDirectory: '',
+  sourceAgent: '',
 })
 
 const emit = defineEmits<Emits>()
@@ -32,6 +34,10 @@ const projectFolderName = computed(() => {
   const sep = props.workingDirectory.includes('\\') ? '\\' : '/'
   const parts = props.workingDirectory.split(sep).filter(Boolean)
   return parts[parts.length - 1] || ''
+})
+
+const displayAgent = computed(() => {
+  return (props.sourceAgent || '').trim() || 'unknown'
 })
 
 function handleThemeChange() {
@@ -102,17 +108,19 @@ function handleToggleAlwaysOnTop() {
         </n-button>
       </n-space>
     </div>
-    <!-- 项目目录标识 -->
-    <div v-if="projectFolderName" class="mt-1.5 ml-6">
-      <n-tooltip trigger="hover">
-        <template #trigger>
-          <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs text-white/50 bg-white/5 cursor-default">
-            <span class="i-carbon-folder w-3 h-3" />
-            {{ projectFolderName }}
-          </span>
-        </template>
+    <!-- 目录与发起agent信息（默认直接显示，不隐藏） -->
+    <div class="mt-1.5 ml-6 flex flex-wrap items-center gap-2 text-xs text-white/70">
+      <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-white/8">
+        <span class="i-carbon-folder w-3 h-3" />
+        {{ projectFolderName || 'unknown' }}
+      </span>
+      <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-white/8">
+        <span class="i-carbon-user w-3 h-3" />
+        {{ displayAgent }}
+      </span>
+      <span v-if="props.workingDirectory" class="text-white/45 break-all">
         {{ props.workingDirectory }}
-      </n-tooltip>
+      </span>
     </div>
   </div>
 </template>

@@ -623,14 +623,14 @@ defineExpose({
   <div class="space-y-3">
     <!-- 预定义选项 -->
     <div v-if="!loading && hasOptions" class="space-y-3" data-guide="predefined-options">
-      <h4 class="text-sm font-medium text-white">
+      <h4 class="text-sm font-medium text-black">
         请选择选项
       </h4>
       <n-space vertical size="small">
         <div
           v-for="(option, index) in request!.predefined_options"
           :key="`option-${index}`"
-          class="rounded-lg p-3 border border-gray-600 bg-gray-100 cursor-pointer hover:opacity-80 transition-opacity"
+          class="rounded-lg p-3 border border-gray-300 bg-white cursor-pointer hover:bg-gray-50 transition-colors"
           @click="handleOptionToggle(option)"
         >
           <n-checkbox
@@ -649,7 +649,7 @@ defineExpose({
 
     <!-- 图片预览区域 -->
     <div v-if="!loading && uploadedImages.length > 0" class="space-y-3">
-      <h4 class="text-sm font-medium text-white">
+      <h4 class="text-sm font-medium text-black">
         已添加的图片 ({{ uploadedImages.length }})
       </h4>
 
@@ -694,7 +694,7 @@ defineExpose({
 
     <!-- 文本输入区域 -->
     <div v-if="!loading" class="space-y-3">
-      <h4 class="text-sm font-medium text-white">
+      <h4 class="text-sm font-medium text-black">
         {{ hasOptions ? '补充说明 (可选)' : '请输入您的回复' }}
       </h4>
 

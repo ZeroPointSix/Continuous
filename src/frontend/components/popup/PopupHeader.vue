@@ -40,6 +40,10 @@ const displayAgent = computed(() => {
   return (props.sourceAgent || '').trim() || 'unknown'
 })
 
+const displayFolder = computed(() => {
+  return projectFolderName.value || 'unknown'
+})
+
 function handleThemeChange() {
   const nextTheme = props.currentTheme === 'light' ? 'dark' : 'light'
   emit('themeChange', nextTheme)
@@ -109,16 +113,18 @@ function handleToggleAlwaysOnTop() {
       </n-space>
     </div>
     <!-- 目录与发起agent信息（默认直接显示，不隐藏） -->
-    <div class="mt-1.5 ml-6 flex flex-wrap items-center gap-2 text-xs text-white/70">
-      <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-white/8">
+    <div class="mt-1.5 ml-6 flex flex-wrap items-center gap-2 text-sm">
+      <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-black-700 text-white">
         <span class="i-carbon-folder w-3 h-3" />
-        {{ projectFolderName || 'unknown' }}
+        <span class="font-medium">目录:</span>
+        <span>{{ displayFolder }}</span>
       </span>
-      <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-white/8">
+      <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-black-700 text-white">
         <span class="i-carbon-user w-3 h-3" />
-        {{ displayAgent }}
+        <span class="font-medium">Agent:</span>
+        <span>{{ displayAgent }}</span>
       </span>
-      <span v-if="props.workingDirectory" class="text-white/45 break-all">
+      <span v-if="props.workingDirectory" class="text-black-700 break-all">
         {{ props.workingDirectory }}
       </span>
     </div>

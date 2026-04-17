@@ -204,6 +204,8 @@ export default defineConfig({
     'i-carbon-pin',
     'i-carbon-pin-filled',
     'i-carbon-search',
+    'i-carbon-folder',
+    'i-carbon-user',
     'i-carbon-connection-signal',
     'i-carbon-activity',
     'i-carbon-settings-adjust',

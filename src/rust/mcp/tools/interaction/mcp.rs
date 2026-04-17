@@ -15,6 +15,10 @@ impl InteractionTool {
     pub async fn zhi(
         request: ZhiRequest,
     ) -> Result<CallToolResult, McpError> {
+        let working_directory = std::env::current_dir()
+            .map(|p| p.to_string_lossy().to_string())
+            .unwrap_or_default();
+
         let popup_request = PopupRequest {
             id: generate_request_id(),
             message: request.message,
@@ -24,6 +28,7 @@ impl InteractionTool {
                 Some(request.predefined_options)
             },
             is_markdown: request.is_markdown,
+            working_directory,
         };
 
         match create_tauri_popup(&popup_request) {

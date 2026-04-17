@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import ThemeIcon from '../common/ThemeIcon.vue'
 
 interface Props {
@@ -6,6 +7,7 @@ interface Props {
   loading?: boolean
   showMainLayout?: boolean
   alwaysOnTop?: boolean
+  workingDirectory?: string
 }
 
 interface Emits {
@@ -19,12 +21,20 @@ const props = withDefaults(defineProps<Props>(), {
   loading: false,
   showMainLayout: false,
   alwaysOnTop: false,
+  workingDirectory: '',
 })
 
 const emit = defineEmits<Emits>()
 
+const projectFolderName = computed(() => {
+  if (!props.workingDirectory)
+    return ''
+  const sep = props.workingDirectory.includes('\\') ? '\\' : '/'
+  const parts = props.workingDirectory.split(sep).filter(Boolean)
+  return parts[parts.length - 1] || ''
+})
+
 function handleThemeChange() {
-  // 切换到下一个主题
   const nextTheme = props.currentTheme === 'light' ? 'dark' : 'light'
   emit('themeChange', nextTheme)
 }
@@ -51,7 +61,6 @@ function handleToggleAlwaysOnTop() {
 
       <!-- 右侧：操作按钮 -->
       <n-space size="small">
-        <!-- 置顶按钮 -->
         <n-button
           size="small"
           quaternary
@@ -92,6 +101,18 @@ function handleToggleAlwaysOnTop() {
           </template>
         </n-button>
       </n-space>
+    </div>
+    <!-- 项目目录标识 -->
+    <div v-if="projectFolderName" class="mt-1.5 ml-6">
+      <n-tooltip trigger="hover">
+        <template #trigger>
+          <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs text-white/50 bg-white/5 cursor-default">
+            <span class="i-carbon-folder w-3 h-3" />
+            {{ projectFolderName }}
+          </span>
+        </template>
+        {{ props.workingDirectory }}
+      </n-tooltip>
     </div>
   </div>
 </template>

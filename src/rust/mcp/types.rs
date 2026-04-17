@@ -51,6 +51,7 @@ pub struct PopupRequest {
     pub message: String,
     pub predefined_options: Option<Vec<String>>,
     pub is_markdown: bool,
+    pub working_directory: String,
 }
 
 /// 新的结构化响应数据格式

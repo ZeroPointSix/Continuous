@@ -123,6 +123,98 @@ cp target/release/等一下 target/release/寸止 ~/.local/bin/
 ### 使用预编译版本
 重新下载最新版本并替换旧文件。
 
+### Windows：使用 GitHub Actions 产物替换（推荐）
+
+> 适用于你现在这条链路：先触发 `Build CLI Tools`，再用最新 run 的 Windows 产物覆盖本机旧 exe。
+
+1. **停止旧进程**（先关掉正在运行的 `等一下.exe` / `寸止.exe`）
+2. **下载最新 run 产物**（示例）
+
+```powershell
+# 1) 触发构建
+gh workflow run "Build CLI Tools" --ref main
+
+# 2) 查看最新 run
+gh run list --workflow "Build CLI Tools" --limit 1
+
+# 3) 确认 run 成功（把 <RUN_ID> 换成实际值）
+gh run view <RUN_ID> --json status,conclusion,url
+
+# 4) 下载产物到本地目录
+gh run download <RUN_ID> --dir "target/ci-artifacts/run-<RUN_ID>"
+```
+
+3. **解压 Windows 包**
+
+```powershell
+Expand-Archive -Path "target/ci-artifacts/run-<RUN_ID>/cunzhi-cli-windows-x86_64/cunzhi-cli-main-windows-x86_64.zip" `
+  -DestinationPath "target/ci-artifacts/run-<RUN_ID>/windows-unpacked" -Force
+```
+
+4. **覆盖你正在使用的安装目录**（关键）
+
+假设你的实际安装目录是 `C:\cunzhi`：
+
+```powershell
+Copy-Item -Force "target/ci-artifacts/run-<RUN_ID>/windows-unpacked/等一下.exe" "C:\cunzhi\等一下.exe"
+Copy-Item -Force "target/ci-artifacts/run-<RUN_ID>/windows-unpacked/寸止.exe" "C:\cunzhi\寸止.exe"
+```
+
+如果提示“文件被占用（being used by another process）”，先停止占用进程再覆盖：
+
+```powershell
+Get-Process | Where-Object { $_.ProcessName -like '*寸止*' -or $_.ProcessName -like '*等一下*' } | Stop-Process -Force
+```
+
+5. **验证更新结果**
+
+```powershell
+& "C:\cunzhi\等一下.exe" --help
+& "C:\cunzhi\寸止.exe" --help
+```
+
+6. **（可选）直接用解压目录先试跑**
+
+```powershell
+Start-Process -FilePath "target\ci-artifacts\run-<RUN_ID>\windows-unpacked\等一下.exe"
+```
+
+> 注意：只有把新 exe 覆盖到你 PATH 实际指向的目录，日常命令调用才会真正“更新到新版本”。
+
+#### 快速定位 Windows 的真实覆盖目录（PATH 命中目录）
+
+```powershell
+Get-Command "等一下" -All | Select-Object Name,Path
+Get-Command "寸止" -All | Select-Object Name,Path
+where.exe 等一下
+where.exe 寸止
+```
+
+如果两组输出一致，就用该目录作为“替换目标目录”。
+
+### 卸载重装前：先备份配置文件（Windows）
+
+默认配置文件位置：
+
+```text
+C:\Users\<你的用户名>\AppData\Roaming\cunzhi\config.json
+```
+
+推荐一键备份到桌面（带时间戳）：
+
+```powershell
+$timestamp = Get-Date -Format "yyyyMMdd-HHmmss"
+$src = Join-Path $env:APPDATA "cunzhi\config.json"
+$dst = Join-Path ([Environment]::GetFolderPath('Desktop')) ("cunzhi-config-backup-" + $timestamp + ".json")
+Copy-Item -Force $src $dst
+```
+
+重装后恢复：
+
+```powershell
+Copy-Item -Force "C:\Users\<你的用户名>\Desktop\cunzhi-config-backup-xxxxxx.json" (Join-Path $env:APPDATA "cunzhi\config.json")
+```
+
 ### 使用源码
 ```bash
 git pull

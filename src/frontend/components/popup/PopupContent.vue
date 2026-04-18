@@ -309,11 +309,11 @@ onUpdated(() => {
 </script>
 
 <template>
-  <div class="text-black">
+  <div class="text-white">
     <!-- 加载状态 -->
     <div v-if="loading" class="flex flex-col items-center justify-center py-8">
       <n-spin size="medium" />
-      <p class="text-sm mt-3 text-gray-500">
+      <p class="text-sm mt-3 text-white opacity-60">
         加载中...
       </p>
     </div>
@@ -335,15 +335,15 @@ onUpdated(() => {
         ]"
         v-html="renderMarkdown(request.message)"
       />
-      <div v-else class="whitespace-pre-wrap leading-relaxed text-black">
+      <div v-else class="whitespace-pre-wrap leading-relaxed text-white">
         {{ request.message }}
       </div>
 
       <!-- 引用原文按钮 - 位于右下角 -->
-      <div class="flex justify-end mt-4 pt-3 border-t border-gray-200" data-guide="quote-message">
+      <div class="flex justify-end mt-4 pt-3 border-t border-gray-600/30" data-guide="quote-message">
         <div
           title="点击将AI的消息内容引用到输入框中"
-          class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-md transition-all duration-200 cursor-pointer border border-blue-200 hover:border-blue-300 shadow-sm hover:shadow-md"
+          class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-blue-500/20 hover:bg-blue-500/30 text-white rounded-md transition-all duration-200 cursor-pointer border border-blue-500/50 hover:border-blue-500/70 shadow-sm hover:shadow-md"
           @click="quoteMessage"
         >
           <div class="i-carbon-quotes w-3.5 h-3.5" />
@@ -354,7 +354,7 @@ onUpdated(() => {
 
     <!-- 错误状态 -->
     <n-alert v-else type="error" title="数据加载错误">
-      <div class="text-black">
+      <div class="text-white">
         Request对象: {{ JSON.stringify(request) }}
       </div>
     </n-alert>

@@ -59,12 +59,12 @@ function handleToggleAlwaysOnTop() {
 </script>
 
 <template>
-  <div class="px-4 py-3 select-none bg-white">
+  <div class="px-4 py-3 select-none bg-black">
     <div class="flex items-center justify-between">
       <!-- 左侧：标题 -->
       <div class="flex items-center gap-3">
         <div class="w-3 h-3 rounded-full bg-primary-500" />
-        <h1 class="text-base font-medium text-black-900">
+        <h1 class="text-base font-medium text-white">
           寸止 - 告别AI提前终止烦恼，助力AI更加持久
         </h1>
       </div>
@@ -81,7 +81,7 @@ function handleToggleAlwaysOnTop() {
           <template #icon>
             <div
               :class="props.alwaysOnTop ? 'i-carbon-pin-filled' : 'i-carbon-pin'"
-              class="w-4 h-4 text-black-700"
+              class="w-4 h-4 text-white opacity-80"
             />
           </template>
         </n-button>
@@ -95,7 +95,7 @@ function handleToggleAlwaysOnTop() {
           <template #icon>
             <div
               :class="props.showMainLayout ? 'i-carbon-chat' : 'i-carbon-settings'"
-              class="w-4 h-4 text-black-700"
+              class="w-4 h-4 text-white opacity-80"
             />
           </template>
         </n-button>
@@ -107,13 +107,13 @@ function handleToggleAlwaysOnTop() {
           @click="handleThemeChange"
         >
           <template #icon>
-            <ThemeIcon :theme="props.currentTheme" class="w-4 h-4 text-black-700" />
+            <ThemeIcon :theme="props.currentTheme" class="w-4 h-4 text-white opacity-80" />
           </template>
         </n-button>
       </n-space>
     </div>
     <!-- 目录与发起agent信息（纯白底黑字，两行文本常显） -->
-    <div class="mt-1.5 ml-6 text-sm leading-5 text-black">
+    <div class="mt-1.5 ml-6 text-sm leading-5 text-white">
       <div class="break-all">
         <span class="font-medium">目录：</span>
         <span>{{ displayFolder }}</span>
@@ -122,7 +122,7 @@ function handleToggleAlwaysOnTop() {
         <span class="font-medium">Agent：</span>
         <span>{{ displayAgent }}</span>
       </div>
-      <div v-if="props.workingDirectory" class="break-all text-black">
+      <div v-if="props.workingDirectory" class="break-all text-white opacity-85">
         <span class="font-medium">路径：</span>
         <span>{{ props.workingDirectory }}</span>
       </div>

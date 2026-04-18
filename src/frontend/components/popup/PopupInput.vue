@@ -623,14 +623,14 @@ defineExpose({
   <div class="space-y-3">
     <!-- 预定义选项 -->
     <div v-if="!loading && hasOptions" class="space-y-3" data-guide="predefined-options">
-      <h4 class="text-sm font-medium text-black">
+      <h4 class="text-sm font-medium text-white">
         请选择选项
       </h4>
       <n-space vertical size="small">
         <div
           v-for="(option, index) in request!.predefined_options"
           :key="`option-${index}`"
-          class="rounded-lg p-3 border border-gray-300 bg-white cursor-pointer hover:bg-gray-50 transition-colors"
+          class="rounded-lg p-3 border border-gray-600 bg-gray-100 cursor-pointer hover:opacity-80 transition-opacity"
           @click="handleOptionToggle(option)"
         >
           <n-checkbox
@@ -649,7 +649,7 @@ defineExpose({
 
     <!-- 图片预览区域 -->
     <div v-if="!loading && uploadedImages.length > 0" class="space-y-3">
-      <h4 class="text-sm font-medium text-black">
+      <h4 class="text-sm font-medium text-white">
         已添加的图片 ({{ uploadedImages.length }})
       </h4>
 
@@ -694,13 +694,13 @@ defineExpose({
 
     <!-- 文本输入区域 -->
     <div v-if="!loading" class="space-y-3">
-      <h4 class="text-sm font-medium text-black">
+      <h4 class="text-sm font-medium text-white">
         {{ hasOptions ? '补充说明 (可选)' : '请输入您的回复' }}
       </h4>
 
       <!-- 自定义prompt按钮区域 -->
       <div v-if="customPromptEnabled && customPrompts.length > 0" class="space-y-2" data-guide="custom-prompts">
-        <div class="text-xs text-gray-600 flex items-center gap-2">
+        <div class="text-xs text-on-surface-secondary flex items-center gap-2">
           <div class="i-carbon-bookmark w-3 h-3 text-primary-500" />
           <span>快捷模板 (拖拽调整顺序):</span>
         </div>
@@ -713,11 +713,11 @@ defineExpose({
             v-for="prompt in sortablePrompts"
             :key="prompt.id"
             :title="prompt.description || (prompt.content.trim() ? prompt.content : '清空输入框')"
-            class="inline-flex items-center gap-1 px-2 py-1 text-xs bg-white hover:bg-gray-50 rounded transition-all duration-200 select-none border border-gray-300 text-black sortable-item"
+            class="inline-flex items-center gap-1 px-2 py-1 text-xs bg-container-secondary hover:bg-container-tertiary rounded transition-all duration-200 select-none border border-gray-600 text-on-surface sortable-item"
           >
             <!-- 拖拽手柄 -->
-            <div class="drag-handle cursor-move p-0.5 rounded hover:bg-gray-100 transition-colors">
-              <div class="i-carbon-drag-horizontal w-3 h-3 text-gray-500" />
+            <div class="drag-handle cursor-move p-0.5 rounded hover:bg-container-tertiary transition-colors">
+              <div class="i-carbon-drag-horizontal w-3 h-3 text-on-surface-secondary" />
             </div>
 
             <!-- 按钮内容 -->
@@ -733,7 +733,7 @@ defineExpose({
 
       <!-- 上下文追加区域 -->
       <div v-if="customPromptEnabled && conditionalPrompts.length > 0" class="space-y-2" data-guide="context-append">
-        <div class="text-xs text-gray-600 flex items-center gap-2">
+        <div class="text-xs text-on-surface-secondary flex items-center gap-2">
           <div class="i-carbon-settings-adjust w-3 h-3 text-primary-500" />
           <span>上下文追加:</span>
         </div>
@@ -741,13 +741,13 @@ defineExpose({
           <div
             v-for="prompt in conditionalPrompts"
             :key="prompt.id"
-            class="flex items-center justify-between p-2 bg-white rounded border border-gray-300 hover:bg-gray-50 transition-colors text-xs"
+            class="flex items-center justify-between p-2 bg-container-secondary rounded border border-gray-600 hover:bg-container-tertiary transition-colors text-xs"
           >
             <div class="flex-1 min-w-0 mr-2">
-              <div class="text-xs text-black truncate font-medium" :title="prompt.condition_text || prompt.name">
+              <div class="text-xs text-on-surface truncate font-medium" :title="prompt.condition_text || prompt.name">
                 {{ prompt.condition_text || prompt.name }}
               </div>
-              <div v-if="getConditionalDescription(prompt)" class="text-xs text-primary-600 opacity-60 mt-0.5 truncate leading-tight" :title="getConditionalDescription(prompt)">
+              <div v-if="getConditionalDescription(prompt)" class="text-xs text-primary-600 dark:text-primary-400 opacity-50 dark:opacity-60 mt-0.5 truncate leading-tight" :title="getConditionalDescription(prompt)">
                 {{ getConditionalDescription(prompt) }}
               </div>
             </div>
@@ -762,7 +762,7 @@ defineExpose({
 
       <!-- 图片提示区域 -->
       <div v-if="uploadedImages.length === 0" class="text-center">
-        <div class="text-xs text-gray-600">
+        <div class="text-xs text-on-surface-secondary">
           💡 提示：可以在输入框中粘贴图片 ({{ pasteShortcut }})
         </div>
       </div>
@@ -790,10 +790,10 @@ defineExpose({
         </div>
       </template>
       <div class="space-y-4">
-        <p class="text-sm text-gray-600">
+        <p class="text-sm text-on-surface-secondary">
           输入框中已有内容，请选择插入模式：
         </p>
-        <div class="bg-gray-100 border border-gray-200 p-3 rounded text-sm text-black">
+        <div class="bg-container-secondary p-3 rounded text-sm">
           {{ pendingPromptContent }}
         </div>
       </div>

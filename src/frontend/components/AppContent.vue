@@ -100,14 +100,14 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-white">
+  <div class="min-h-screen bg-black">
     <!-- MCP弹窗模式 -->
     <div
       v-if="props.showMcpPopup && props.mcpRequest"
-      class="flex flex-col w-full h-screen bg-white text-black select-none"
+      class="flex flex-col w-full h-screen bg-black text-white select-none"
     >
       <!-- 头部 - 固定在顶部 -->
-      <div class="sticky top-0 z-50 flex-shrink-0 bg-white border-b border-gray-200">
+      <div class="sticky top-0 z-50 flex-shrink-0 bg-black border-b border-black-200">
         <PopupHeader
           :current-theme="props.appConfig.theme"
           :loading="false"
@@ -153,10 +153,10 @@ onUnmounted(() => {
     <!-- 弹窗加载骨架屏 或 初始化骨架屏 -->
     <div
       v-else-if="props.showMcpPopup || props.isInitializing"
-      class="flex flex-col w-full h-screen bg-white text-black"
+      class="flex flex-col w-full h-screen bg-black text-white"
     >
       <!-- 头部骨架 -->
-      <div class="flex-shrink-0 bg-white border-b border-gray-200 px-4 py-3">
+      <div class="flex-shrink-0 bg-black border-b border-black-200 px-4 py-3">
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-3">
             <n-skeleton
@@ -186,7 +186,7 @@ onUnmounted(() => {
 
       <!-- 内容骨架 -->
       <div class="flex-1 p-4">
-        <div class="bg-gray-100 border border-gray-200 rounded-lg p-4 mb-4">
+        <div class="bg-black-100 border border-black-200 rounded-lg p-4 mb-4">
           <n-skeleton
             text
             :repeat="3"
@@ -206,7 +206,7 @@ onUnmounted(() => {
       </div>
 
       <!-- 底部骨架 -->
-      <div class="flex-shrink-0 bg-gray-100 border-t border-gray-200 p-4">
+      <div class="flex-shrink-0 bg-black-100 border-t border-black-200 p-4">
         <div class="flex justify-between items-center">
           <n-skeleton
             text

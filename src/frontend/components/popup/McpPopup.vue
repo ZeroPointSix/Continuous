@@ -392,12 +392,12 @@ Here is my original instruction:
     <!-- 内容区域 - 可滚动 -->
     <div class="flex-1 overflow-y-auto scrollbar-thin">
       <!-- 消息内容 - 允许选中 -->
-      <div class="mx-2 mt-2 mb-1 px-4 py-3 bg-white border border-gray-200 rounded-lg select-text" data-guide="popup-content">
-        <PopupContent :request="request" :loading="loading" current-theme="light" @quote-message="handleQuoteMessage" />
+      <div class="mx-2 mt-2 mb-1 px-4 py-3 bg-black-100 rounded-lg select-text" data-guide="popup-content">
+        <PopupContent :request="request" :loading="loading" :current-theme="props.appConfig.theme" @quote-message="handleQuoteMessage" />
       </div>
 
       <!-- 输入和选项 - 允许选中 -->
-      <div class="px-4 pb-3 bg-white select-text">
+      <div class="px-4 pb-3 bg-black select-text">
         <PopupInput
           ref="inputRef" :request="request" :loading="loading" :submitting="submitting"
           @update="handleInputUpdate" @image-add="handleImageAdd" @image-remove="handleImageRemove"
@@ -406,7 +406,7 @@ Here is my original instruction:
     </div>
 
     <!-- 底部操作栏 - 固定在底部 -->
-    <div class="flex-shrink-0 bg-white border-t border-gray-200" data-guide="popup-actions">
+    <div class="flex-shrink-0 bg-black-100 border-t-2 border-black-200" data-guide="popup-actions">
       <PopupActions
         :request="request" :loading="loading" :submitting="submitting" :can-submit="canSubmit"
         :continue-reply-enabled="continueReplyEnabled" :input-status-text="inputStatusText"

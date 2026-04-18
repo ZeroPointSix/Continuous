@@ -5,7 +5,7 @@ import MainLayoutTest from './components/MainLayoutTest.vue'
 import McpPopupTest from './components/McpPopupTest.vue'
 import ThemesTest from './components/ThemesTest.vue'
 
-const activeTab = ref('main-ui')
+const activeTab = ref('mcp-popup')
 const useSimulatedWindow = ref(true)
 
 const tabs = [

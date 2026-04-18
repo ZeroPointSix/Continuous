@@ -14,6 +14,7 @@ import {
   NInputGroup,
   NInputNumber,
   NMessageProvider,
+  NModal,
   NNotificationProvider,
   NSpace,
   NSwitch,
@@ -21,6 +22,7 @@ import {
   NTabPane,
   NTabs,
   NTag,
+  NTooltip,
 } from 'naive-ui'
 import { createApp } from 'vue'
 
@@ -53,7 +55,9 @@ const naive = create({
     NTabPane,
     NTabs,
     NTag,
+    NTooltip,
     NMessageProvider,
+    NModal,
     NNotificationProvider,
     NDialogProvider,
   ],

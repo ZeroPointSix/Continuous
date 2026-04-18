@@ -12,6 +12,23 @@ const showControls = ref(props.showControls !== false)
 
 const currentTheme = ref('dark')
 const showPopup = ref(true)
+const mockAppConfig = ref({
+  theme: currentTheme.value,
+  window: {
+    alwaysOnTop: false,
+    width: 600,
+    height: 900,
+    fixed: false,
+  },
+  audio: {
+    enabled: false,
+    url: '',
+  },
+  reply: {
+    enabled: true,
+    prompt: '请按照最佳实践继续',
+  },
+})
 
 // 模拟不同类型的 MCP 请求
 const requestTemplates = [
@@ -151,10 +168,19 @@ interface PopupSystem {
       is_markdown: true,
     },
   },
+  {
+    name: '回归验证请求',
+    request: {
+      id: 'test-regression',
+      message: '请选择回归验证操作：',
+      predefined_options: ['选项A', '', '选项B'],
+      is_markdown: false,
+    },
+  },
 ]
 
-const currentTemplate = ref(2) // 默认显示markdown模板
-const currentRequest = ref(requestTemplates[2].request)
+const currentTemplate = ref(4) // 默认显示回归验证模板
+const currentRequest = ref(requestTemplates[4].request)
 
 function switchTemplate(index: number) {
   currentTemplate.value = index
@@ -171,6 +197,7 @@ function handleCancel() {
 
 function handleThemeChange(theme: string) {
   currentTheme.value = theme
+  mockAppConfig.value.theme = theme
   console.log('主题切换:', theme)
 }
 
@@ -251,7 +278,7 @@ function togglePopup() {
           <div v-if="showPopup" class="popup-mode">
             <div class="popup-overlay">
               <McpPopup
-                :request="currentRequest" :current-theme="currentTheme" :mock-mode="true"
+                :request="currentRequest" :app-config="mockAppConfig" :mock-mode="true"
                 @response="handleResponse" @cancel="handleCancel" @theme-change="handleThemeChange"
                 @open-main-layout="handleOpenMainLayout"
               />
@@ -300,7 +327,7 @@ function togglePopup() {
     <!-- 纯净模式 - 只显示弹窗 -->
     <div v-else class="pure-mode">
       <McpPopup
-        :request="currentRequest" :current-theme="currentTheme" :mock-mode="true" @response="handleResponse"
+        :request="currentRequest" :app-config="mockAppConfig" :mock-mode="true" @response="handleResponse"
         @cancel="handleCancel" @theme-change="handleThemeChange" @open-main-layout="handleOpenMainLayout"
       />
     </div>

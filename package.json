@@ -8,6 +8,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "lint": "eslint . --fix",
+    "test:unit": "node --experimental-strip-types --test src/frontend/components/popup/*.test.ts",
     "tauri": "cargo tauri",
     "tauri:dev": "cargo tauri dev",
     "tauri:build": "cargo tauri build",

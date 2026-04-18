@@ -7,6 +7,7 @@ import { useSortable } from '@vueuse/integrations/useSortable'
 import { useMessage } from 'naive-ui'
 import { computed, nextTick, onMounted, onUnmounted, ref, shallowRef, watch } from 'vue'
 import { useKeyboard } from '../../composables/useKeyboard'
+import { executeOptionInteraction, focusTextareaAtEnd } from './optionInteraction'
 
 interface Props {
   request: McpRequest | null
@@ -35,7 +36,7 @@ const emit = defineEmits<Emits>()
 const userInput = ref('')
 const selectedOptions = ref<string[]>([])
 const uploadedImages = ref<string[]>([])
-const textareaRef = ref<HTMLTextAreaElement | null>(null)
+const textareaRef = ref<any>(null)
 
 // 自定义prompt相关状态
 const customPrompts = ref<CustomPrompt[]>([])
@@ -172,16 +173,70 @@ function handleOptionChange(option: string, checked: boolean) {
   emitUpdate()
 }
 
-// 处理选项切换（整行点击）
-function handleOptionToggle(option: string) {
-  const idx = selectedOptions.value.indexOf(option)
-  if (idx > -1) {
-    selectedOptions.value.splice(idx, 1)
+function getNativeTextareaElement(): HTMLTextAreaElement | null {
+  const instance = textareaRef.value as any
+  if (!instance)
+    return null
+
+  const fromEl = instance.$el?.querySelector?.('textarea') as HTMLTextAreaElement | undefined
+  if (fromEl)
+    return fromEl
+
+  return (instance.inputElRef as HTMLTextAreaElement | undefined) || null
+}
+
+async function focusInputAtEnd() {
+  await nextTick()
+  focusTextareaAtEnd(getNativeTextareaElement())
+}
+
+async function copyToClipboard(text: string): Promise<void> {
+  if (typeof navigator !== 'undefined' && navigator.clipboard?.writeText) {
+    await navigator.clipboard.writeText(text)
+    return
   }
-  else {
-    selectedOptions.value.push(option)
+
+  if (typeof document !== 'undefined') {
+    const tempTextArea = document.createElement('textarea')
+    tempTextArea.value = text
+    tempTextArea.style.position = 'fixed'
+    tempTextArea.style.opacity = '0'
+    document.body.appendChild(tempTextArea)
+    tempTextArea.focus()
+    tempTextArea.select()
+
+    const copied = document.execCommand('copy')
+    document.body.removeChild(tempTextArea)
+
+    if (copied)
+      return
   }
-  emitUpdate()
+
+  throw new Error('Clipboard API unavailable')
+}
+
+// 处理预定义选项点击（单击复制 / Ctrl+单击追加）
+async function handleOptionClick(option: string, event: MouseEvent) {
+  const result = await executeOptionInteraction({
+    input: userInput.value,
+    optionText: option,
+    event,
+    setInput: (nextInput) => {
+      userInput.value = nextInput
+    },
+    focusInputAtEnd,
+    copyToClipboard,
+    notifyCopySuccess: (content) => {
+      message.success(content)
+    },
+    notifyCopyFailure: (content) => {
+      message.error(content)
+    },
+  })
+
+  if (result.action === 'copy-failure') {
+    console.error('复制选项失败:', result.error)
+  }
 }
 
 // 移除了所有拖拽和上传组件相关的代码
@@ -631,7 +686,7 @@ defineExpose({
           v-for="(option, index) in request!.predefined_options"
           :key="`option-${index}`"
           class="rounded-lg p-3 border border-gray-600 bg-gray-100 cursor-pointer hover:opacity-80 transition-opacity"
-          @click="handleOptionToggle(option)"
+          @click="handleOptionClick(option, $event)"
         >
           <n-checkbox
             :value="option"

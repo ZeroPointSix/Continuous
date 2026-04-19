@@ -153,6 +153,15 @@ function setOptionFeedback(index: number, text: string, level: OptionFeedbackLev
   optionFeedbackTimers.set(index, timerId)
 }
 
+function isCheckboxControlClick(event: MouseEvent): boolean {
+  const target = event.target as HTMLElement | null
+  if (!target || typeof target.closest !== 'function') {
+    return false
+  }
+
+  return Boolean(target.closest('.n-checkbox-box-wrapper, .n-checkbox-box, input[type="checkbox"]'))
+}
+
 // 计算属性
 const hasOptions = computed(() => (props.request?.predefined_options?.length ?? 0) > 0)
 const canSubmit = computed(() => {
@@ -265,6 +274,12 @@ async function copyToClipboard(text: string): Promise<void> {
 
 // 处理预定义选项点击（单击复制 / Ctrl+单击追加）
 async function handleOptionClick(option: string, optionIndex: number, event: MouseEvent) {
+  // 允许点击 checkbox 控件本体时按原生勾选逻辑执行
+  // 其余区域继续走“单击复制 / Ctrl+单击追加”
+  if (isCheckboxControlClick(event)) {
+    return
+  }
+
   // 采用 capture 阶段拦截，确保点击选项任意区域（含 checkbox）都走复制/追加逻辑
   // 并阻断 checkbox 自身的选中态切换，满足“单击复制不改变选中态”口径
   event.preventDefault()

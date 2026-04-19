@@ -191,9 +191,17 @@ async function focusInputAtEnd() {
 }
 
 async function copyToClipboard(text: string): Promise<void> {
+  let lastError: unknown = null
+
   if (typeof navigator !== 'undefined' && navigator.clipboard?.writeText) {
-    await navigator.clipboard.writeText(text)
-    return
+    try {
+      await navigator.clipboard.writeText(text)
+      return
+    }
+    catch (error) {
+      // 某些环境下 Clipboard API 会偶发 NotAllowedError，继续走降级方案
+      lastError = error
+    }
   }
 
   if (typeof document !== 'undefined') {
@@ -210,13 +218,22 @@ async function copyToClipboard(text: string): Promise<void> {
 
     if (copied)
       return
+
+    if (!lastError) {
+      lastError = new Error('document.execCommand(copy) returned false')
+    }
   }
 
-  throw new Error('Clipboard API unavailable')
+  throw lastError ?? new Error('Clipboard API unavailable')
 }
 
 // 处理预定义选项点击（单击复制 / Ctrl+单击追加）
 async function handleOptionClick(option: string, event: MouseEvent) {
+  // 采用 capture 阶段拦截，确保点击选项任意区域（含 checkbox）都走复制/追加逻辑
+  // 并阻断 checkbox 自身的选中态切换，满足“单击复制不改变选中态”口径
+  event.preventDefault()
+  event.stopPropagation()
+
   const result = await executeOptionInteraction({
     input: userInput.value,
     optionText: option,
@@ -686,7 +703,7 @@ defineExpose({
           v-for="(option, index) in request!.predefined_options"
           :key="`option-${index}`"
           class="rounded-lg p-3 border border-gray-600 bg-gray-100 cursor-pointer hover:opacity-80 transition-opacity"
-          @click="handleOptionClick(option, $event)"
+          @click.capture="handleOptionClick(option, $event)"
         >
           <n-checkbox
             :value="option"

@@ -117,6 +117,42 @@ const { pasteShortcut } = useKeyboard()
 
 const message = useMessage()
 
+type OptionFeedbackLevel = 'success' | 'error' | 'info'
+
+interface OptionFeedbackState {
+  text: string
+  level: OptionFeedbackLevel
+}
+
+const optionFeedbackMap = ref<Record<number, OptionFeedbackState>>({})
+const optionFeedbackTimers = new Map<number, number>()
+
+function clearOptionFeedback(index: number) {
+  const timerId = optionFeedbackTimers.get(index)
+  if (timerId !== undefined) {
+    window.clearTimeout(timerId)
+    optionFeedbackTimers.delete(index)
+  }
+
+  if (optionFeedbackMap.value[index]) {
+    delete optionFeedbackMap.value[index]
+  }
+}
+
+function setOptionFeedback(index: number, text: string, level: OptionFeedbackLevel, duration = 1600) {
+  clearOptionFeedback(index)
+  optionFeedbackMap.value[index] = { text, level }
+
+  const timerId = window.setTimeout(() => {
+    if (optionFeedbackMap.value[index]?.text === text) {
+      delete optionFeedbackMap.value[index]
+    }
+    optionFeedbackTimers.delete(index)
+  }, duration)
+
+  optionFeedbackTimers.set(index, timerId)
+}
+
 // 计算属性
 const hasOptions = computed(() => (props.request?.predefined_options?.length ?? 0) > 0)
 const canSubmit = computed(() => {
@@ -228,7 +264,7 @@ async function copyToClipboard(text: string): Promise<void> {
 }
 
 // 处理预定义选项点击（单击复制 / Ctrl+单击追加）
-async function handleOptionClick(option: string, event: MouseEvent) {
+async function handleOptionClick(option: string, optionIndex: number, event: MouseEvent) {
   // 采用 capture 阶段拦截，确保点击选项任意区域（含 checkbox）都走复制/追加逻辑
   // 并阻断 checkbox 自身的选中态切换，满足“单击复制不改变选中态”口径
   event.preventDefault()
@@ -252,7 +288,18 @@ async function handleOptionClick(option: string, event: MouseEvent) {
   })
 
   if (result.action === 'copy-failure') {
+    setOptionFeedback(optionIndex, '复制失败，请手动复制', 'error')
     console.error('复制选项失败:', result.error)
+    return
+  }
+
+  if (result.action === 'copy-success') {
+    setOptionFeedback(optionIndex, '已复制', 'success')
+    return
+  }
+
+  if (result.action === 'append') {
+    setOptionFeedback(optionIndex, '已追加', 'info')
   }
 }
 
@@ -642,6 +689,9 @@ onMounted(async () => {
 })
 
 onUnmounted(() => {
+  optionFeedbackTimers.forEach(timerId => window.clearTimeout(timerId))
+  optionFeedbackTimers.clear()
+
   // 清理事件监听器
   if (unlistenCustomPromptUpdate) {
     unlistenCustomPromptUpdate()
@@ -703,18 +753,32 @@ defineExpose({
           v-for="(option, index) in request!.predefined_options"
           :key="`option-${index}`"
           class="rounded-lg p-3 border border-gray-600 bg-gray-100 cursor-pointer hover:opacity-80 transition-opacity"
-          @click.capture="handleOptionClick(option, $event)"
+          @click.capture="handleOptionClick(option, index, $event)"
         >
-          <n-checkbox
-            :value="option"
-            :checked="selectedOptions.includes(option)"
-            :disabled="submitting"
-            size="medium"
-            @update:checked="(checked: boolean) => handleOptionChange(option, checked)"
-            @click.stop
-          >
-            {{ option }}
-          </n-checkbox>
+          <div class="flex items-center justify-between gap-2">
+            <n-checkbox
+              :value="option"
+              :checked="selectedOptions.includes(option)"
+              :disabled="submitting"
+              size="medium"
+              @update:checked="(checked: boolean) => handleOptionChange(option, checked)"
+              @click.stop
+            >
+              {{ option }}
+            </n-checkbox>
+
+            <span
+              v-if="optionFeedbackMap[index]"
+              class="text-xs shrink-0"
+              :class="{
+                'text-green-600': optionFeedbackMap[index].level === 'success',
+                'text-red-600': optionFeedbackMap[index].level === 'error',
+                'text-blue-600': optionFeedbackMap[index].level === 'info',
+              }"
+            >
+              {{ optionFeedbackMap[index].text }}
+            </span>
+          </div>
         </div>
       </n-space>
     </div>
